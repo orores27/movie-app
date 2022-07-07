@@ -1,13 +1,28 @@
 <script>
+    import {goto} from '$app/navigation';
+    import {fly} from 'svelte/transition';
+
     let inputValue = '';
+
+    function submitSearch() {
+        goto('/search/' + inputValue);
+    }
 </script>
 
-<form class="search">
-    {#if inputValue === ''}
-        <label for="search_movie">Search movie</label>
+<form on:submit|preventDefault={submitSearch} class="search">
+    {#if !inputValue}
+        <label in:fly={{ y: -10, duration: 500}} out:fly={{ y: -10, duration: 500}} for="search_movie">Search movie</label>
     {/if}
-    <input on:focus={() => active = true} on:blur={() => active = false} bind:value={inputValue} id="search_movie" name="search_movie" type="text">
-    <button>Search</button>
+    <input 
+        bind:value={inputValue}
+        id="search_movie"
+        name="search_movie"
+        type="text"
+        class={inputValue ? 'selected' : ''}
+    >
+    {#if inputValue}
+        <button in:fly={{ x: 20, duration: 500}} out:fly={{ x: 0, duration: 500}}>Search</button>
+    {/if}
 </form>
 
 <style>
@@ -45,6 +60,9 @@
         background: rgb(63, 63, 63);
         border-radius: 10px;
         padding: 1rem;
+    }
+    input.selected {
+        background: rgb(50, 50, 50);
     }
     label {
         position: absolute;
