@@ -1,27 +1,37 @@
 <script>
+    let inputValue= '';
+    let active= false;
     import {goto} from '$app/navigation';
-    import {fly} from 'svelte/transition';
+    import { fly } from 'svelte/transition';
 
-    let inputValue = '';
-
-    function submitSearch() {
+    function cancelInactive(){
+        if(inputValue){
+            active =true;
+        } else {
+            active =false;
+        }
+    }
+    function submitSearch(){
         goto('/search/' + inputValue);
     }
 </script>
 
 <form on:submit|preventDefault={submitSearch} class="search">
-    {#if !inputValue}
-        <label in:fly={{ y: -10, duration: 500}} out:fly={{ y: -10, duration: 500}} for="search_movie">Search movie</label>
+    {#if !active}
+    <label in:fly={{ y: -10, duration: 500}} out:fly={{ y: -10, duration: 500}} for="search_movie">Search movie</label>
+        </label>
     {/if}
-    <input 
-        bind:value={inputValue}
-        id="search_movie"
-        name="search_movie"
-        type="text"
-        class={inputValue ? 'selected' : ''}
-    >
+        <input 
+            on:blur={cancelInactive} 
+            on:focus={() => (active = true)} 
+            bind:value={inputValue} 
+            name="search_movie" 
+            type="text" 
+            class={active ? 'selected' : ''}
+        />
     {#if inputValue}
-        <button in:fly={{ x: 20, duration: 500}} out:fly={{ x: 0, duration: 500}}>Search</button>
+        <button out:fly={{ x: 0, duration: 500 }} in:fly={{ x: 20, duration: 500 }} >Search
+        </button>
     {/if}
 </form>
 
@@ -31,9 +41,8 @@
         width: 30%;
         margin: 1rem;
     }
-    button {
+    button{
         font-size: 0.7rem;
-        padding: 0rem 1rem;
         background: rgb(96, 110, 201);
         color: white;
         font-weight: bold;
@@ -46,23 +55,22 @@
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         cursor: pointer;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
     input {
         width: 100%;
         border: none;
         font-size: 1rem;
-        font-family: 'Poppins';
+        font-family: 'Poppins', sans-serif;
         outline: none;
         color: rgb(255, 255, 255);
         padding: 0.5rem 0.1rem;
-        transition: background 0.75s ease-out;
+        transition: 0.75s ease-out;
         font-weight: bold;
         background: rgb(63, 63, 63);
         border-radius: 10px;
         padding: 1rem;
-    }
-    input.selected {
-        background: rgb(50, 50, 50);
     }
     label {
         position: absolute;
@@ -73,5 +81,8 @@
         pointer-events: none;
         color: #fff;
         padding: 0rem 1rem;
+    }
+    input.selected{
+        background: rgb(50, 50, 50);
     }
 </style>

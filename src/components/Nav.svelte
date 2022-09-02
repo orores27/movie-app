@@ -13,7 +13,7 @@
         font-size: 1rem;
         font-weight: bold;
         font-family: 'Poppins';
-        color: #000;
+        color: black;
         text-decoration: none;
     }
 </style>
